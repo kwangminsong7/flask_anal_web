@@ -156,7 +156,7 @@ def save():
     news.to_excel(writer, sheet_name='All_News')
     df_artc_top_view.to_excel(writer, sheet_name='Top_View_News')
     df_artc_top_comm.to_excel(writer, sheet_name='Top_Comments_News')
-    writer.save()
+    writer.close()
 
     return "실시간 뉴스(정치, 경제, 사회, IT/과학) 기사 데이터가 엑셀 형식으로 다운로드 완료 되었습니다. 다운로드 폴더를 확인하세요"
 
