@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file, send_from_directory, make_response
 from flask_paginate import Pagination, get_page_parameter
 import requests as req
 from bs4 import BeautifulSoup
@@ -14,6 +14,7 @@ import dataframe_image as dfi
 import sys
 from matplotlib import pyplot as plt
 from concurrent.futures import ThreadPoolExecutor
+import inspect
 
 
 app = Flask(__name__)
@@ -148,6 +149,7 @@ def it_science():
 # page 3-1) #################################### save ########################################
 
 @app.route('/save')
+
 def save():
     filename = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     writer = pd.ExcelWriter("log-"+filename+".xlsx", engine='xlsxwriter')
@@ -157,8 +159,9 @@ def save():
     df_artc_top_view.to_excel(writer, sheet_name='Top_View_News')
     df_artc_top_comm.to_excel(writer, sheet_name='Top_Comments_News')
     writer.close()
+    message = "오늘의 모든 4개 분야 뉴스기사, 조회수가 많은 뉴스기사, 댓글수가 많은 뉴스기사 데이터가 엑셀로 다운로드 완료 되었습니다."
 
-    return "실시간 뉴스(정치, 경제, 사회, IT/과학) 기사 데이터가 엑셀 형식으로 다운로드 완료 되었습니다. 다운로드 폴더를 확인하세요"
+    return message
 
 #4) #################################### Data Analysis ########################################
 
