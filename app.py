@@ -15,6 +15,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 
 app = Flask(__name__)
+app.debug =True
 
 ############################################# Crawl ######################################################3
 # 1. Today's politics, economics, society, digital alticles from the website which is named daum, page 1 to 400 - Daum
@@ -236,12 +237,6 @@ def analysis():
         cloud.to_file(filepath) 
 
     return render_template('board.html', notice = notice)
-
-#5) #################################### help ########################################
-
-@app.route('/help')
-def help():
-    return render_template("board.html")
     
 if __name__ == '__main__':
     app.run('0.0.0.0', port=9000, debug=True)   
