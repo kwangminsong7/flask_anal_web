@@ -9,12 +9,9 @@ from wordcloud import WordCloud
 from konlpy.tag import Kkma
 from collections import Counter
 import os
-import seaborn as sns
 import dataframe_image as dfi
 import sys
-from matplotlib import pyplot as plt
 from concurrent.futures import ThreadPoolExecutor
-import inspect
 
 
 app = Flask(__name__)
