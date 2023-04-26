@@ -204,6 +204,14 @@ def analysis():
     dfi.export(df_artc_top_comm[['title']].rename(columns={'title':'오늘의 댓글 수, Top3'})[:3].style.hide(),'static/images/top3_comm.jpg')
 
     # analysis 3 - express keywords count on the wordcloud, all fields and each section of news
+# analysis 3 - express keywords count on the wordcloud, all fields and each section of news
+    pol = news[news['type']=='politics'][:150]
+    eco = news[news['type']=='economic'][:150]
+    soc = news[news['type']=='society'][:150]
+    dig = news[news['type']=='digital'][:150]
+
+    news = pd.concat([pol,eco,soc,dig]).reset_index(drop=True)
+
     news_types = ['all', 'politics', 'economic', 'society', 'digital']
     colormaps = ['Set3','Blues', 'Greens', 'Oranges', 'Purples']
 
@@ -236,7 +244,7 @@ def analysis():
         filepath = 'static/images/'+filename
         cloud.to_file(filepath) 
 
-    return render_template('board.html', notice = notice)
+        return render_template('board.html', notice = notice)
     
 if __name__ == '__main__':
     app.run('0.0.0.0', port=9000, debug=True)   
