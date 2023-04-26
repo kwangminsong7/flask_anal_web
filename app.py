@@ -117,6 +117,25 @@ for value in target_articles.values():
 df_artc_top_comm = pd.DataFrame(data=targets)
 df_artc_top_comm
 
+now = datetime.now()
+start = datetime(now.year, now.month, now.day)
+diff = now - start
+diff
+total_seconds = diff.total_seconds()
+hours = int(total_seconds // 3600)
+minutes = int((total_seconds % 3600) // 60)
+result_str = f"{hours}시간 {minutes}분"
+result_str
+# 공지 문구 제작
+result_str = f"{hours}시간 {minutes}분"
+title_cnt = news['title'].count()
+press_cnt = pd.DataFrame(news['press'].unique())[0].count()
+politics_count = news[news['type'] == 'politics']['title'].count()
+economic_count = news[news['type'] == 'economic']['title'].count()
+society_count = news[news['type'] == 'society']['title'].count()
+digital_count = news[news['type'] == 'digital']['title'].count()
+notice = f"기사 수집은 하루가 지나면 초기화 됩니다.\n오늘, 현재까지 {result_str} 동안 수집된 기사는 총 {title_cnt}개, {press_cnt}개의 언론사가 보도하였습니다.\n각 분야 별로는 정치 {politics_count}개, 경제 {economic_count}개, 사회 {society_count}개, IT/과학 {digital_count}개 기사가 수집되었습니다."
+
 # page 1) #################################### home ########################################
 @app.route('/')
 def index():
@@ -165,52 +184,8 @@ def save():
 
 @app.route('/analysis')
 def analysis():
-    # analysis 0 - 분석 개괄 공지 문구
-    
-    # 지난 시간 계산
-    now = datetime.now()
-    start = datetime(now.year, now.month, now.day)
-    diff = now - start
-    diff
-    total_seconds = diff.total_seconds()
-    hours = int(total_seconds // 3600)
-    minutes = int((total_seconds % 3600) // 60)
-    result_str = f"{hours}시간 {minutes}분"
-    result_str
-    # 공지 문구 제작
-    result_str = f"{hours}시간 {minutes}분"
-    title_cnt = news['title'].count()
-    press_cnt = pd.DataFrame(news['press'].unique())[0].count()
-    politics_count = news[news['type'] == 'politics']['title'].count()
-    economic_count = news[news['type'] == 'economic']['title'].count()
-    society_count = news[news['type'] == 'society']['title'].count()
-    digital_count = news[news['type'] == 'digital']['title'].count()
-    notice = f"기사 수집은 하루가 지나면 초기화 됩니다.\n오늘, 현재까지 {result_str} 동안 수집된 기사는 총 {title_cnt}개, {press_cnt}개의 언론사가 보도하였습니다.\n각 분야 별로는 정치 {politics_count}개, 경제 {economic_count}개, 사회 {society_count}개, IT/과학 {digital_count}개 기사가 수집되었습니다."
-    notice
-
-    # # analysis 1 - 섹션별 기사 수 그래프
-    # type_dict = {'Politics': politics_count,
-    #             'Economics': economic_count,
-    #             'Society': society_count,
-    #             'IT/Science': digital_count}
-    # type_df = pd.DataFrame.from_dict(data=type_dict, orient='index', columns=['count'])
-    # sns.set_style("whitegrid")
-    # sns.barplot(x=type_df['count'], y=type_df.index, palette=["#b2df8a", "#a6cee3", "#fb9a99", "#fdbf6f"] )
-    # sns.despine(left=True, bottom=True)
-    # plt.savefig('static/images/section_cnt.jpg')
-
-    # analysis 2 - express top3 view and comments title
     dfi.export(df_artc_top_view[['title']].rename(columns={'title':'오늘의 조회 수, Top3'})[:3].style.hide(),'static/images/top3_view.jpg')
     dfi.export(df_artc_top_comm[['title']].rename(columns={'title':'오늘의 댓글 수, Top3'})[:3].style.hide(),'static/images/top3_comm.jpg')
-
-    # analysis 3 - express keywords count on the wordcloud, all fields and each section of news
-# analysis 3 - express keywords count on the wordcloud, all fields and each section of news
-    pol = news[news['type']=='politics'][:150]
-    eco = news[news['type']=='economic'][:150]
-    soc = news[news['type']=='society'][:150]
-    dig = news[news['type']=='digital'][:150]
-
-    news = pd.concat([pol,eco,soc,dig]).reset_index(drop=True)
 
     news_types = ['all', 'politics', 'economic', 'society', 'digital']
     colormaps = ['Set3','Blues', 'Greens', 'Oranges', 'Purples']
@@ -244,7 +219,7 @@ def analysis():
         filepath = 'static/images/'+filename
         cloud.to_file(filepath) 
 
-        return render_template('board.html', notice = notice)
-    
+    return render_template('board.html', notice = notice)
+
 if __name__ == '__main__':
     app.run('0.0.0.0', port=9000, debug=True)   
